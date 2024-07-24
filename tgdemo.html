@@ -67,6 +67,17 @@
         <div align="center">
             <a href="https://ton.org/"><img width="48" src="./assets/tapps.png" alt="logo of telegram web apps"></a>
         </div>
+
+        <div>
+            <div>
+                <div id="username"></div>
+            </div>
+            <button onclick="getUser();">click</button>
+            <button onclick="chongzhi();">充值</button>
+            <button onclick="tixian();">提现</button>
+
+        </div>
+
         <h1>Modals</h1>
         <button onclick="Telegram.WebApp.showAlert('Hello World!');">Launch Alert</button>
         <button onclick="showPopup();">Launch Popup</button>
@@ -87,12 +98,38 @@
         <h1>Buttons</h1>
         <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
         <button onclick="toggleMainButton();">Toggle Main Button</button>
+
+
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
     <div id="viewport-params-expand"></div>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- <script src="/assets/telegram-web-app.js" ></script> -->
     <script>
+        function chongzhi(){
+
+        }
+
+        function tixian(){
+
+        }
+
+        function getUser(){
+            const  initData  = Telegram.WebApp.initDataUnsafe;
+            console.log(initData);
+            initData.auth_date;
+            initData.chat_instance;
+            initData.chat_type;
+            initData.hash;
+            const user= initData.user;
+            user.username;
+            user.id;
+            let myDiv = document.getElementById("username");
+            myDiv.innerHTML = '你好！'+user.id +' | '+user.username;
+
+        }
+
         // Init TWA
         Telegram.WebApp.ready();
 
@@ -152,7 +189,7 @@
         Telegram.WebApp.onEvent('themeChanged', function() {
             document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
         });
-
+        getUser();
     </script>
 
     <!-- Eruda is console for mobile browsers -->
