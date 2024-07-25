@@ -7,6 +7,8 @@
     <title>Telegram Mini Apps Vanilla JS Sample App</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://xiannv1100.github.io/blockplay/assets/js/qrcode.min.js"></script>
+
     <style>
         body {
             --bg-color: var(--tg-theme-bg-color);
@@ -77,6 +79,18 @@
             <button onclick="getUser();">click</button>
             <button onclick="chongzhi();">充值</button>
             <button onclick="tixian();">提现</button>
+            <div>
+                {{depositData.order_sn}}
+            </div>
+            <div>
+                {{depositData.pay_usdt}}
+            </div>
+            <div>
+                {{depositData.time_out}}
+            </div>
+            <div>
+                {{depositData.address_list}}
+            </div>
         </div>
 
         <h1>Modals</h1>
@@ -200,7 +214,18 @@
         const app = createApp({
             data() {
                 return {
-                    depositData: {},
+                    depositData: {
+                        "address_list": "[{\"chain_type\":1,\"address\":\"TXZFHRd5tCKc49gVaGfcx56iw8STqbEGJx\",\"img\":\"http:\\/\\/file.4hggkyvc.work\\/qrcode\\/2024-03-10\\/17100850074193.jpg\"}]",
+                        "en_pay_url": "http://payment.api.4hggkyvc.work/index/en_order/mid/103/id/PO2024072511251879054564",
+                        "signature": "F45E246898FA62FB3CBBED93BF8BA420",
+                        "appid": "y3SOBUuh83xqQpsQ",
+                        "usdt_cny": "7.27",
+                        "pay_usdt": 1000,
+                        "pay_money": "7270.00",
+                        "order_sn": "TG1721877918091",
+                        "pay_url": "http://payment.api.4hggkyvc.work/index/order/mid/103/id/PO2024072511251879054564",
+                        "time_out": 600
+                    },
                 }
             },
             methods: {
@@ -211,8 +236,8 @@
                             id: 1,
                         }
                     }).then(function (response) {
-                        console.log(response);
                         let data = response.data;
+                        console.log(data);
                         _this.depositData = data.data;
                     })
                         .catch(function (error) {
