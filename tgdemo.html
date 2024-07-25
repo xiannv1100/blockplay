@@ -260,8 +260,9 @@
                 }, 2);
             },
             deposit() {
-                this.depositData = {},
-                    this.address0 = {}
+                this.depositData = {};
+                this.address0 = {};
+                this.errMsg="";
                 const _this = this;
                 axios.get(hostUrl + '/deposit', {
                     params: {
