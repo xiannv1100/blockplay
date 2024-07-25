@@ -102,7 +102,9 @@
         </div>
         <button :onclick="deposit" >充值</button>
         <button onclick="tixian();" disabled>提现</button>
-
+        <div v-if="errMsg" style="padding: 12px 0;color: #f44336;">
+            {{errMsg}}
+        </div>
         <div v-if="depositData.order_sn">
             <h3>充值信息：</h3>
             <div style="padding: 6px 0;">
@@ -240,6 +242,7 @@
                 depositData: {},
                 address0: {},
                 status:0,
+                errMsg:"",
             }
         },
         methods: {
@@ -276,6 +279,7 @@
                         _this.getDeposit();
                     } else {
                         console.log(data);
+                        _this.errMsg = JSON.stringify(data);
                     }
                 })
                     .catch(function (error) {
