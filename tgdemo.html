@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Telegram Mini Apps Vanilla JS Sample App</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://xiannv1100.github.io/blockplay/assets/js/qrcode.min.js"></script>
+    <script src="https://xiannv1100.github.io/blockplay/assets/js/native-ui.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <style>
         body {
@@ -23,6 +26,7 @@
         a {
             color: var(--tg-theme-link-color);
         }
+
         #viewport {
             position: fixed;
             left: 0;
@@ -32,6 +36,7 @@
             pointer-events: none;
             transition: all .2s ease;
         }
+
         #viewport:after {
             content: '';
             display: block;
@@ -57,219 +62,276 @@
             padding: 4px;
             vertical-align: top;
         }
+
         #viewport-params-size {
             top: 4px;
         }
+
         #viewport-params-expand {
             top: 30px;
+        }
+
+        button {
+            background-color: #4CAF50; /* 按钮背景色 */
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 6px 6px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+        button:disabled {
+            background-color: #999999;
         }
     </style>
 </head>
 
 <body>
-    <main>
-        <div align="center">
-            <a href="https://ton.org/"><img width="48" src="./assets/tapps.png" alt="logo of telegram web apps"></a>
+<main>
+    <div id="app" class="app">
+        <div>
+            ID：{{user.id}} 名字：{{user.username}}
+        </div>
+        <button :onclick="deposit" >充值</button>
+        <button onclick="tixian();" disabled>提现</button>
+
+        <div v-if="depositData.order_sn">
+            <h3>充值信息：</h3>
+            <div style="padding: 6px 0;">
+                订单号：{{depositData.order_sn}}
+            </div>
+            <div style="padding: 6px 0;">
+                支付金额： {{depositData.pay_usdt}}
+            </div>
+            <div style="padding: 6px 0;">
+                超时时间(分钟)： {{depositData.time_out / 60}}
+            </div>
+            <div v-if="status === 1" style="padding: 12px 0;color: #4CAF50">
+                支付状态： 支付成功
+            </div>
+            <div v-else style="padding: 12px 0;color: #f44336">
+                支付状态：未支付
+            </div>
+            <div>
+                <div id="qrcode"
+                     style="display: flex;align-items: center;justify-content: center;padding: 12px 0;"></div>
+                <div style="text-align: center;padding: 12px 0;">
+                    付款地址： {{address0.address}}
+                </div>
+            </div>
+
         </div>
 
-        <div id="app">
-            <div>
-                <div id="username"></div>
-            </div>
-            <button onclick="getUser();">click</button>
-            <button onclick="chongzhi();">充值</button>
-            <button onclick="tixian();">提现</button>
-            <div>
-                {{depositData.order_sn}}
-            </div>
-            <div>
-                {{depositData.pay_usdt}}
-            </div>
-            <div>
-                {{depositData.time_out}}
-            </div>
-            <div>
-                {{depositData.address_list}}
-            </div>
-        </div>
 
-        <h1>Modals</h1>
-        <button onclick="Telegram.WebApp.showAlert('Hello World!');">Launch Alert</button>
-        <button onclick="showPopup();">Launch Popup</button>
+    </div>
 
-        <h1>Links</h1>
-        <ul>
-            <li>
-                <a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/trendingapps');">Open link within Telegram</a>
-            </li>
-            <li>
-                <a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
-            </li>
-            <li>
-                <a href="javascript:Telegram.WebApp.openLink('https://telegra.ph/api',{try_instant_view:true});">Open link inside Telegram webview</a>
-            </li>
-        </ul>
+    <!--
+    <h1>Modals</h1>
+    <button onclick="Telegram.WebApp.showAlert('Hello World!');">Launch Alert</button>
+    <button onclick="showPopup();">Launch Popup</button>
 
-        <h1>Buttons</h1>
-        <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
-        <button onclick="toggleMainButton();">Toggle Main Button</button>
+    <h1>Links</h1>
+    <ul>
+        <li>
+            <a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/trendingapps');">Open link within Telegram</a>
+        </li>
+        <li>
+            <a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
+        </li>
+        <li>
+            <a href="javascript:Telegram.WebApp.openLink('https://telegra.ph/api',{try_instant_view:true});">Open link inside Telegram webview</a>
+        </li>
+    </ul>
+
+    <h1>Buttons</h1>
+    <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
+    <button onclick="toggleMainButton();">Toggle Main Button</button>
+
+     -->
+</main>
+<!--
+<div id="viewport"></div>
+<div id="viewport-params-size"></div>
+<div id="viewport-params-expand"></div>
+-->
+<script>
+    function chongzhi() {
+
+    }
+
+    function tixian() {
+
+    }
 
 
-    </main>
-    <div id="viewport"></div>
-    <div id="viewport-params-size"></div>
-    <div id="viewport-params-expand"></div>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- <script src="/assets/telegram-web-app.js" ></script> -->
-    <script>
-        function chongzhi(){
+    // Init TWA
+    Telegram.WebApp.ready();
 
-        }
+    Telegram.WebApp.onEvent('themeChanged', function () {
+        document.documentElement.className = Telegram.WebApp.colorScheme;
+    });
 
-        function tixian(){
+    Telegram.WebApp.MainButton.setParams({
+        text: 'Main Button'
+    });
+    Telegram.WebApp.MainButton.onClick(function () {
+        Telegram.WebApp.showAlert('Main Button was clicked')
+    });
+    Telegram.WebApp.MainButton.show();
 
-        }
-
-        function getUser(){
-            const  initData  = Telegram.WebApp.initDataUnsafe;
-            console.log(initData);
-            initData.auth_date;
-            initData.chat_instance;
-            initData.chat_type;
-            initData.hash;
-            const user= initData.user;
-            user.username;
-            user.id;
-            let myDiv = document.getElementById("username");
-            myDiv.innerHTML = '你好！'+user.id +' | '+user.username;
-
-        }
-
-        // Init TWA
-        Telegram.WebApp.ready();
-
-        // Event occurs whenever theme settings are changed in the user's Telegram app (including switching to night mode).
-        Telegram.WebApp.onEvent('themeChanged', function() {
-            document.documentElement.className = Telegram.WebApp.colorScheme;
-        });
-
-        // Show main button
-        Telegram.WebApp.MainButton.setParams({
-            text: 'Main Button'
-        });
-        Telegram.WebApp.MainButton.onClick(function () {
-            Telegram.WebApp.showAlert('Main Button was clicked')
-        });	
-        Telegram.WebApp.MainButton.show();
-
-        // Function to call showPopup API
-        function showPopup() {
-            Telegram.WebApp.showPopup({
-                title: 'Title',
-                message: 'Some message',
-                buttons: [
-                    {id: 'link', type: 'default', text: 'Open ton.org'},
-                    {type: 'cancel'},
-                ]
-            }, function(btn) {
-                if (btn === 'link') {
-                    Telegram.WebApp.openLink('https://ton.org/');
-                }
-            });
-        };
-
-        // Function to toggle main TWA button
-        function toggleMainButton() {
-            if (Telegram.WebApp.MainButton.isVisible) {
-                Telegram.WebApp.MainButton.hide();
-            } else {
-                Telegram.WebApp.MainButton.show();
+    function showPopup() {
+        Telegram.WebApp.showPopup({
+            title: 'Title',
+            message: 'Some message',
+            buttons: [
+                {id: 'link', type: 'default', text: 'Open ton.org'},
+                {type: 'cancel'},
+            ]
+        }, function (btn) {
+            if (btn === 'link') {
+                Telegram.WebApp.openLink('https://ton.org/');
             }
-        };
-
-        function setViewportData() {
-            var sizeEl = document.getElementById('viewport-params-size');
-            sizeEl.innerText = 'width: ' + window.innerWidth + ' x ' + 
-                'height: ' + Telegram.WebApp.viewportStableHeight;
-
-            var expandEl = document.querySelector('#viewport-params-expand');
-            expandEl.innerText = 'Is Expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false');
-        }
-
-        Telegram.WebApp.setHeaderColor('secondary_bg_color');
-
-        setViewportData();
-        Telegram.WebApp.onEvent('viewportChanged', setViewportData);
-
-        Telegram.WebApp.onEvent('themeChanged', function() {
-            document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
         });
+    };
+
+    function toggleMainButton() {
+        if (Telegram.WebApp.MainButton.isVisible) {
+            Telegram.WebApp.MainButton.hide();
+        } else {
+            Telegram.WebApp.MainButton.show();
+        }
+    };
+
+    function setViewportData() {
+        var sizeEl = document.getElementById('viewport-params-size');
+        sizeEl.innerText = 'width: ' + window.innerWidth + ' x ' +
+            'height: ' + Telegram.WebApp.viewportStableHeight;
+
+        var expandEl = document.querySelector('#viewport-params-expand');
+        expandEl.innerText = 'Is Expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false');
+    }
+
+    Telegram.WebApp.setHeaderColor('secondary_bg_color');
+
+    // setViewportData();
+    Telegram.WebApp.onEvent('viewportChanged', setViewportData);
+
+    Telegram.WebApp.onEvent('themeChanged', function () {
+        document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
+    });
 
 
+    const hostUrl = "https://tgweb.4hggkyvc.work";
 
-        const hostUrl = "https://tgweb.4hggkyvc.work";
-        //const hostUrl = "https://localhost:6969";
+    const {createApp, ref} = Vue
 
-        const {createApp, ref} = Vue
-        const app = createApp({
-            data() {
-                return {
-                    depositData: {
-                        "address_list": "[{\"chain_type\":1,\"address\":\"TXZFHRd5tCKc49gVaGfcx56iw8STqbEGJx\",\"img\":\"http:\\/\\/file.4hggkyvc.work\\/qrcode\\/2024-03-10\\/17100850074193.jpg\"}]",
-                        "en_pay_url": "http://payment.api.4hggkyvc.work/index/en_order/mid/103/id/PO2024072511251879054564",
-                        "signature": "F45E246898FA62FB3CBBED93BF8BA420",
-                        "appid": "y3SOBUuh83xqQpsQ",
-                        "usdt_cny": "7.27",
-                        "pay_usdt": 1000,
-                        "pay_money": "7270.00",
-                        "order_sn": "TG1721877918091",
-                        "pay_url": "http://payment.api.4hggkyvc.work/index/order/mid/103/id/PO2024072511251879054564",
-                        "time_out": 600
-                    },
+    const app = createApp({
+        data() {
+            return {
+                user: {id: "000000", username: "游客"},
+                depositData: {},
+                address0: {},
+                status:0,
+            }
+        },
+        methods: {
+            getUser() {
+                const initData = Telegram.WebApp.initDataUnsafe;
+                console.log(initData);
+                if (initData && initData.user) {
+                    this.user = initData.user;
                 }
             },
-            methods: {
-                deposit() {
-                    const _this = this;
-                    axios.get(hostUrl+'/deposit', {
-                        params: {
-                            id: 1,
-                        }
-                    }).then(function (response) {
-                        let data = response.data;
+            makeQrcode() {
+                const _this = this;
+                setTimeout(function () {
+                    new QRCode(document.getElementById("qrcode"), _this.address0.address);
+                }, 2);
+            },
+            deposit() {
+                this.depositData = {},
+                    this.address0 = {}
+                const _this = this;
+                axios.get(hostUrl + '/deposit', {
+                    params: {
+                        user_id: _this.user.id,
+                        username: _this.user.username,
+                    }
+                }).then(function (response) {
+                    let data = response.data;
+                    if (data.code == 1) {
                         console.log(data);
                         _this.depositData = data.data;
+                        let jsonArray = JSON.parse(_this.depositData.address_list);
+                        _this.address0 = jsonArray[0];
+                        _this.makeQrcode();
+                        _this.getDeposit();
+                    } else {
+                        console.log(data);
+                    }
+                })
+                    .catch(function (error) {
+                        console.log(error);
                     })
-                        .catch(function (error) {
-                            console.log(error);
-                        })
-                        .finally(function () {
-                            // always executed
-                        });
-                },
-                preview(item) {
-                    window.open("/i" + item.url, '_blank');
+                    .finally(function () {
+                        // always executed
+                    });
+            },
+            getDeposit() {
+                if(!this.depositData){
+                    return;
                 }
+                const _this = this;
+                axios.get(hostUrl + '/getDeposit', {
+                    params: {
+                        order_sn: _this.depositData.order_sn,
+                    }
+                }).then(function (response) {
+                    let data = response.data;
+                    if (data.code == 1) {
+                        console.log(data);
+                        if(data.data.status === 1){
+                            _this.status = data.data.status;
+                        }
+                    } else {
+                        console.log(data);
+                    }
+                })
+                    .catch(function (error) {
+                        console.log(error);
+                    })
+                    .finally(function () {
+                        // always executed
+                    });
             },
-            mounted() {
-                console.log("初始化");
-                this.deposit();
-                this.intervalId = setInterval(() => {
-                   // this.getMedias();
-                }, 300000);
-            },
-            destroyed() {
-                //clearInterval(this.intervalId);
+            preview(item) {
+                window.open("/i" + item.url, '_blank');
             }
+        },
+        mounted() {
+            this.getUser();
+            this.intervalId = setInterval(() => {
+                this.getDeposit();
+            }, 10000);
 
-        })
-        app.mount('#app')
-        console.log("初始化11");
-        getUser();
-    </script>
+        },
+        destroyed() {
+            clearInterval(this.intervalId);
+        }
 
-    <!-- Eruda is console for mobile browsers -->
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>
+    })
+    app.mount('#app')
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
 </body>
 </html>

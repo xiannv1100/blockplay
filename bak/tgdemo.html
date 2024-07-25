@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Telegram Mini Apps Vanilla JS Sample App</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://xiannv1100.github.io/blockplay/assets/js/qrcode.min.js"></script>
+    <script src="https://xiannv1100.github.io/blockplay/assets/js/native-ui.js"></script>
+
+    <style>
+        body {
+            --bg-color: var(--tg-theme-bg-color);
+            font: 12px/18px "Lucida Grande", "Lucida Sans Unicode", Arial, Helvetica, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--tg-theme-text-color);
+            margin: 48px 24px;
+            padding: 0;
+            color-scheme: var(--tg-color-scheme);
+        }
+
+        a {
+            color: var(--tg-theme-link-color);
+        }
+        #viewport {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: var(--tg-viewport-stable-height, 100vh);
+            pointer-events: none;
+            transition: all .2s ease;
+        }
+        #viewport:after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            border-width: 4px;
+            border-style: solid;
+            border-image: linear-gradient(45deg, rgba(64, 224, 208, .5), rgba(173, 255, 47, .5)) 1;
+        }
+
+        #viewport-params-size,
+        #viewport-params-expand {
+            content: attr(text);
+            position: absolute;
+            display: inline-block;
+            background: var(--tg-theme-link-color, rgb(64, 224, 208));
+            right: 4px;
+            left: auto;
+            font-size: 8px;
+            padding: 4px;
+            vertical-align: top;
+        }
+        #viewport-params-size {
+            top: 4px;
+        }
+        #viewport-params-expand {
+            top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div id="app">
+            <div>
+                <div>
+                    {{user.id}}
+                </div>
+                <div>
+                    {{user.username}}
+                </div>
+            </div>
+            <button onclick="chongzhi();">充值</button>
+            <button onclick="tixian();">提现</button>
+            <div>
+                {{depositData.order_sn}}
+            </div>
+            <div>
+                {{depositData.pay_usdt}}
+            </div>
+            <div>
+                {{depositData.time_out}}
+            </div>
+            <div>
+                {{depositData.address_list}}
+            </div>
+            <div id="qrcode"></div>
+
+        </div>
+
+        <h1>Modals</h1>
+        <button onclick="Telegram.WebApp.showAlert('Hello World!');">Launch Alert</button>
+        <button onclick="showPopup();">Launch Popup</button>
+
+        <h1>Links</h1>
+        <ul>
+            <li>
+                <a href="javascript:Telegram.WebApp.openTelegramLink('https://t.me/trendingapps');">Open link within Telegram</a>
+            </li>
+            <li>
+                <a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
+            </li>
+            <li>
+                <a href="javascript:Telegram.WebApp.openLink('https://telegra.ph/api',{try_instant_view:true});">Open link inside Telegram webview</a>
+            </li>
+        </ul>
+
+        <h1>Buttons</h1>
+        <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
+        <button onclick="toggleMainButton();">Toggle Main Button</button>
+
+
+    </main>
+    <div id="viewport"></div>
+
+    <div id="viewport-params-size"></div>
+    <div id="viewport-params-expand"></div>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- <script src="/assets/telegram-web-app.js" ></script> -->
+    <script>
+        function chongzhi(){
+
+        }
+
+        function tixian(){
+
+        }
+
+
+
+        // Init TWA
+        Telegram.WebApp.ready();
+
+        // Event occurs whenever theme settings are changed in the user's Telegram app (including switching to night mode).
+        Telegram.WebApp.onEvent('themeChanged', function() {
+            document.documentElement.className = Telegram.WebApp.colorScheme;
+        });
+
+        // Show main button
+        Telegram.WebApp.MainButton.setParams({
+            text: 'Main Button'
+        });
+        Telegram.WebApp.MainButton.onClick(function () {
+            Telegram.WebApp.showAlert('Main Button was clicked')
+        });	
+        Telegram.WebApp.MainButton.show();
+
+        // Function to call showPopup API
+        function showPopup() {
+            Telegram.WebApp.showPopup({
+                title: 'Title',
+                message: 'Some message',
+                buttons: [
+                    {id: 'link', type: 'default', text: 'Open ton.org'},
+                    {type: 'cancel'},
+                ]
+            }, function(btn) {
+                if (btn === 'link') {
+                    Telegram.WebApp.openLink('https://ton.org/');
+                }
+            });
+        };
+
+        // Function to toggle main TWA button
+        function toggleMainButton() {
+            if (Telegram.WebApp.MainButton.isVisible) {
+                Telegram.WebApp.MainButton.hide();
+            } else {
+                Telegram.WebApp.MainButton.show();
+            }
+        };
+
+        function setViewportData() {
+            var sizeEl = document.getElementById('viewport-params-size');
+            sizeEl.innerText = 'width: ' + window.innerWidth + ' x ' + 
+                'height: ' + Telegram.WebApp.viewportStableHeight;
+
+            var expandEl = document.querySelector('#viewport-params-expand');
+            expandEl.innerText = 'Is Expanded: ' + (Telegram.WebApp.isExpanded ? 'true' : 'false');
+        }
+
+        Telegram.WebApp.setHeaderColor('secondary_bg_color');
+
+        setViewportData();
+        Telegram.WebApp.onEvent('viewportChanged', setViewportData);
+
+        Telegram.WebApp.onEvent('themeChanged', function() {
+            document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
+        });
+
+
+
+        const hostUrl = "https://tgweb.4hggkyvc.work";
+
+        const {createApp, ref} = Vue
+
+        const app = createApp({
+            data() {
+                return {
+                    user:{},
+                    depositData: {
+                        "address_list": "[{\"chain_type\":1,\"address\":\"TXZFHRd5tCKc49gVaGfcx56iw8STqbEGJx\",\"img\":\"http:\\/\\/file.4hggkyvc.work\\/qrcode\\/2024-03-10\\/17100850074193.jpg\"}]",
+                        "en_pay_url": "http://payment.api.4hggkyvc.work/index/en_order/mid/103/id/PO2024072511251879054564",
+                        "signature": "F45E246898FA62FB3CBBED93BF8BA420",
+                        "appid": "y3SOBUuh83xqQpsQ",
+                        "usdt_cny": "7.27",
+                        "pay_usdt": 1000,
+                        "pay_money": "7270.00",
+                        "order_sn": "TG1721877918091",
+                        "pay_url": "http://payment.api.4hggkyvc.work/index/order/mid/103/id/PO2024072511251879054564",
+                        "time_out": 600
+                    },
+                }
+            },
+            methods: {
+                 getUser() {
+                     const initData = Telegram.WebApp.initDataUnsafe;
+                     console.log(initData);
+                     this.user = initData.user;
+                 },
+                deposit() {
+                    const _this = this;
+                    axios.get(hostUrl+'/deposit', {
+                        params: {
+                            id: 1,
+                        }
+                    }).then(function (response) {
+                        let data = response.data;
+
+                        if(data.code == 1){
+                            console.log(data);
+                            _this.depositData = data.data;
+                            console.log(_this.depositData.address_list);
+                            let jsonArray = JSON.parse(_this.depositData.address_list);
+                            console.log(jsonArray[0].address);
+                            new QRCode(document.getElementById("qrcode"),jsonArray[0].address);
+                        }else{
+                            console.log(data);
+                        }
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                        .finally(function () {
+                            // always executed
+                        });
+                },
+                preview(item) {
+                    window.open("/i" + item.url, '_blank');
+                }
+            },
+            mounted() {
+                this.getUser();
+                this.deposit();
+                this.intervalId = setInterval(() => {
+                   // this.getMedias();
+                }, 300000);
+
+            },
+            destroyed() {
+                //clearInterval(this.intervalId);
+            }
+
+        })
+        app.mount('#app')
+        console.log("初始化11");
+        getUser();
+    </script>
+
+    <!-- Eruda is console for mobile browsers -->
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+</body>
+</html>
