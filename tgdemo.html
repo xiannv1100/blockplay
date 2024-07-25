@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://xiannv1100.github.io/blockplay/assets/js/qrcode.min.js"></script>
+    <script src="https://xiannv1100.github.io/blockplay/assets/js/native-ui.js"></script>
 
     <style>
         body {
@@ -68,11 +69,14 @@
 
 <body>
     <main>
+        <!--
         <div align="center">
             <a href="https://ton.org/"><img width="48" src="./assets/tapps.png" alt="logo of telegram web apps"></a>
         </div>
-
+         -->
         <div id="app">
+            <n-button>{{ message }}</n-button>
+
             <div>
                 <div id="username"></div>
             </div>
@@ -91,6 +95,8 @@
             <div>
                 {{depositData.address_list}}
             </div>
+            <div id="qrcode"></div>
+
         </div>
 
         <h1>Modals</h1>
@@ -238,7 +244,14 @@
                     }).then(function (response) {
                         let data = response.data;
                         console.log(data);
-                        _this.depositData = data.data;
+
+                       _this.depositData = data.data;
+                       console.log(_this.depositData.address_list);
+                        let jsonArray = JSON.parse(_this.depositData.address_list);
+                        console.log(jsonArray[0].address);
+                        new QRCode(document.getElementById("qrcode"),jsonArray[0].address);
+
+
                     })
                         .catch(function (error) {
                             console.log(error);
@@ -257,12 +270,14 @@
                 this.intervalId = setInterval(() => {
                    // this.getMedias();
                 }, 300000);
+
             },
             destroyed() {
                 //clearInterval(this.intervalId);
             }
 
         })
+        app.use(naive)
         app.mount('#app')
         console.log("初始化11");
         getUser();
