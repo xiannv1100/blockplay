@@ -197,6 +197,9 @@
     function jcAppNotifyTest() {
         alert("-1")
         console.log("jcAppNotifyTest");
+
+        Toaster.postMessage("User Agent: " + navigator.userAgent);
+
         console.log(window.Toaster);
         console.log(Toaster);
 
