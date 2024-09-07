@@ -98,8 +98,8 @@
 <main>
     <div id="app" class="app">
 
-        <button :onclick="jcAppNotifyAndroid()" >jcAppNotifyAndroid</button>
-        <button :onclick="jcAppNotifyIOS()" >jcAppNotifyIOS</button>
+        <button onclick="jcAppNotifyAndroid()" >jcAppNotifyAndroid</button>
+        <button onclick="jcAppNotifyIOS()" >jcAppNotifyIOS</button>
 
 
         <a href="tg://user?id=123456789:"> 返回[tg]应用 </a> <br/>
@@ -198,6 +198,7 @@
 
         window.flutter_inappwebview.callHandler('Toaster', 'Hello from JavaScript');
 
+        window.flutter_inappwebview.callHandler('jcAppNotify', '{"action": "cancelQueue"}');
 
     }
 
