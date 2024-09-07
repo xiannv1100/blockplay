@@ -197,6 +197,16 @@
     function jcAppNotifyTest() {
         console.log("jcAppNotifyTest");
         console.log(window.flutter_inappwebview);
+
+
+
+        window.webview_flutter.callHandler('Toaster', 'Hello from JavaScript');
+
+        window.webview_flutter.callHandler('jcAppNotify', '{"action": "cancelQueue"}');
+
+
+        alert(1);
+
         window.flutter_inappwebview.callHandler('Toaster', 'Hello from JavaScript');
 
         window.flutter_inappwebview.callHandler('jcAppNotify', '{"action": "cancelQueue"}');
