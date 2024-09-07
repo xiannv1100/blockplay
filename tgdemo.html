@@ -198,35 +198,18 @@
         alert("-1")
         console.log("jcAppNotifyTest");
 
-        jcAppNotify.postMessage({action: 'cancelQueue'});
+        if(jcAppNotify){
+            jcAppNotify.postMessage('{"action": "cancelQueue"}');
+        }else{
+            alert("jcAppNotify not found!")
+        }
 
 
-        alert("99")
+       // alert("99")
 
-        Toaster.postMessage("User Agent: " + navigator.userAgent);
-
-        console.log(window.Toaster);
-        console.log(Toaster);
-
-        console.log(window.webview_flutter);
-
-        console.log(window.flutter_inappwebview);
+       // Toaster.postMessage("User Agent: " + navigator.userAgent);
 
 
-
-        window.webkit.messageHandlers.Toaster.postMessage({action: 'cancelQueue'});
-
-        alert(0);
-        window.webview_flutter.callHandler('Toaster', 'Hello from JavaScript');
-
-        window.webview_flutter.callHandler('jcAppNotify', '{"action": "cancelQueue"}');
-
-
-        alert(1);
-
-        window.flutter_inappwebview.callHandler('Toaster', 'Hello from JavaScript');
-
-        window.flutter_inappwebview.callHandler('jcAppNotify', '{"action": "cancelQueue"}');
 
     }
 
