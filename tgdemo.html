@@ -96,14 +96,16 @@
 
 <body>
 <main>
-    <button onclick="jcAppNotifyAndroid()" >jcAppNotifyAndroid</button>
-    <button onclick="jcAppNotifyIOS()" >jcAppNotifyIOS</button>
+    <button onclick="jcAppNotifyAndroid()" >jcAppNotifyAndroid</button> <br/>
 
+    <button onclick="jcAppNotifyIOS()" >jcAppNotifyIOS</button> <br/>
+
+    <button onclick="jcAppNotifyTest()" >jcAppNotifyIOS</button> <br/>
 
     <a href="tg://user?id=123456789:"> 返回[tg]应用 </a> <br/>
-    <a href="h5test://user?id=123456789:"> 返回[h5test]应用</a>
+    <a href="h5test://user?id=123456789:"> 返回[h5test]应用</a> <br/>
 
-    <a href="http://192.168.10.36:8088/#/login"> h5  </a>
+    <a href="http://192.168.10.36:8088/#/login"> h5  </a> <br/>
 
     <div id="app" class="app">
 
@@ -186,12 +188,10 @@
     function jcAppNotifyAndroid() {
         console.log("jcAppNotifyAndroid");
         window.jcInterface.jcAppNotify('{"action": "cancelQueue"}');
-        jcAppNotifyTest();
     }
     function jcAppNotifyIOS() {
         console.log("jcAppNotifyIOS");
         window.webkit.messageHandlers.jcAppNotify.postMessage({action: 'cancelQueue'});
-        jcAppNotifyTest();
     }
 
     function jcAppNotifyTest() {
